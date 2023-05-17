@@ -1,5 +1,7 @@
+import "reflect-metadata";
 import express from "express";
 import { router } from "./http/routes";
+import "./shared/container/";
 const app = express();
 const port = 8080;
 

@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String   @id @default(uuid())
+  name     String
+  email    String
+  password String
+  Rating   Rating[]
+}
+
+model Rating {
+  id      String @id @default(uuid())
+  userId  String
+  movieId Int
+  rate    Int
+  user    User   @relation(fields: [userId], references: [id])
+  movie   Movie  @relation(fields: [movieId], references: [id])
+}
+
+model Movie {
+  id          Int      @id
+  name        String
+  description String
+  averageRate Float
+  Rating      Rating[]
+}

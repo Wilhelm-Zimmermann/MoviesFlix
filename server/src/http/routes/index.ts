@@ -1,8 +1,7 @@
 import express from "express";
+import { userRouter } from "./user.routes";
 const router = express.Router();
 
-router.get("/", (req,res) => {
-	res.send("Everything is ok");
-});
+router.use(userRouter);
 
 export { router };
