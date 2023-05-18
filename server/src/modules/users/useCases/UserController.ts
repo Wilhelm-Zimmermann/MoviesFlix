@@ -10,4 +10,12 @@ export class UserController {
 
 		return res.status(201).json(user);
 	}
+
+	async login(req: Request, res: Response): Promise<Response> {
+		const { email, password } = req.body;
+		const userService = container.resolve<UserService>(UserService);
+		const token = await userService.login({email, password});
+
+		return res.status(200).json({token});
+	}
 }
