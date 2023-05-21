@@ -3,9 +3,10 @@ import { ICreateUserDTO } from "../dtos/ICreateUserDTO";
 import { IUsersRepository } from "../repositories/IUsersRepository";
 import { IUserCreatedResponse } from "../responses/ICreatedUserResponse";
 import { inject, injectable } from "tsyringe";
-import { hash } from "bcrypt";
+import { hash, compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import jwtConfig from "../../../utils/jwtConfig";
+import { AppError } from "../../../shared/errors/AppError";
 
 
 @injectable()
@@ -18,6 +19,11 @@ export class UserService {
 			...userInfo,
 			password: hashedPassword
 		};
+		
+		const userAlreadyExists = await this.usersRepository?.getUserByEmail(userInfo.email);		
+
+		if(userAlreadyExists)
+			throw new AppError("This email is already in use", 400);
 
 		const user = await this.usersRepository.createUser(userToCreate);
 
@@ -28,7 +34,17 @@ export class UserService {
 	}
 
 	async login(userInfo: ILoginUserDTO): Promise<string> {
+		// Procurando se existe um usuário no banco de dados com base no email
 		const user = await this.usersRepository.getUserByEmail(userInfo.email);
+
+		if(!user)
+			throw new AppError("Email/Password might be wrong", 400);
+		
+		// Utilizar o método "compare" para verificar se as senhas coincidem
+		const passwordMatch = await compare(userInfo.password, user.password);
+
+		if(!passwordMatch)
+			throw new AppError("Email/Password might be wrong", 400);
 
 		const token = sign(
 			{

@@ -4,6 +4,6 @@ import { IUserCreatedResponse } from "../responses/ICreatedUserResponse";
 
 export interface IUsersRepository{
     createUser(user: ICreateUserDTO):Promise<IUserCreatedResponse>;
-    getUserById(id: string):Promise<IUserCreatedResponse>;
-    getUserByEmail(email: string):Promise<ILoginUserDTO>;
+    getUserById(id: string):Promise<IUserCreatedResponse | null>;
+    getUserByEmail(email: string):Promise<ILoginUserDTO | null>;
 }
