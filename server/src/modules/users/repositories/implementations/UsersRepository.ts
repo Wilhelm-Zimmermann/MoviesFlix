@@ -29,16 +29,20 @@ export class UsersRepository implements IUsersRepository{
 		};
 	}
 	
-	async getUserByEmail(userEmail: string): Promise<ILoginUserDTO> {
-		const {email, password} = await prismaClient.user.findFirstOrThrow({
+	async getUserByEmail(userEmail: string): Promise<ILoginUserDTO | null> {
+		
+		const user = await prismaClient.user.findFirst({
 			where : {
 				email: userEmail
 			}
 		});
 
+		if(!user) 
+			return null;
+
 		const userToReturn = {
-			email,
-			password
+			email: user.email,
+			password: user.password
 		};
 
 		return userToReturn;
