@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import express, { Request, Response, NextFunction } from "express";
+import cors from "cors";
 import "./shared/container/";
 import "express-async-errors";
 import { router } from "./http/routes";
@@ -7,6 +8,11 @@ import { AppError } from "./shared/errors/AppError";
 const app = express();
 const port = 8080;
 
+app.use(cors({
+	origin:"http://localhost:3000",
+	methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+	credentials: true
+}));
 app.use(express.json());
 app.use(router);
 

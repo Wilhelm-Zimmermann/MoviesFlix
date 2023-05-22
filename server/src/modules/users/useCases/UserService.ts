@@ -7,6 +7,7 @@ import { hash, compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import jwtConfig from "../../../utils/jwtConfig";
 import { AppError } from "../../../shared/errors/AppError";
+import { ILoginResponse } from "../responses/ILoginResponse";
 
 
 @injectable()
@@ -33,7 +34,7 @@ export class UserService {
 		};
 	}
 
-	async login(userInfo: ILoginUserDTO): Promise<string> {
+	async login(userInfo: ILoginUserDTO): Promise<ILoginResponse> {
 		// Procurando se existe um usuário no banco de dados com base no email
 		const user = await this.usersRepository.getUserByEmail(userInfo.email);
 
@@ -48,12 +49,12 @@ export class UserService {
 
 		const token = sign(
 			{
-				email: user.email
+				userId: user.id
 			}, 
 			jwtConfig.secretKey, 
 			jwtConfig.options
 		);
 
-		return token;
+		return {token};
 	}
 }

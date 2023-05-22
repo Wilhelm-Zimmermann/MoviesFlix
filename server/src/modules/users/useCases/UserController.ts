@@ -16,6 +16,6 @@ export class UserController {
 		const userService = container.resolve<UserService>(UserService);
 		const token = await userService.login({email, password});
 
-		return res.status(200).json({token});
+		return res.status(200).json(token);
 	}
 }

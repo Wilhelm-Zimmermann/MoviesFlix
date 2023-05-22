@@ -1,35 +1,26 @@
+import { User } from "@prisma/client";
 import { prismaClient } from "../../../../utils/prisma";
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
-import { ILoginUserDTO } from "../../dtos/ILoginUserDTO";
-import { IUserCreatedResponse } from "../../responses/ICreatedUserResponse";
 import { IUsersRepository } from "../IUsersRepository";
 
-
 export class UsersRepository implements IUsersRepository{
-	async createUser(userInfo: ICreateUserDTO): Promise<IUserCreatedResponse> {
-		const { name, email } = userInfo;
-		await prismaClient.user.create({ data : userInfo });
-		
-		return {
-			email,
-			name
-		};
+	async createUser(userInfo: ICreateUserDTO): Promise<User | null> {
+		const user = await prismaClient.user.create({ data : userInfo });
+
+		return user;
 	}
 	
-	async getUserById(id: string): Promise<IUserCreatedResponse> {
+	async getUserById(id: string): Promise<User | null> {
 		const userToReturn = await prismaClient.user.findUnique({
 			where:{
 				id
 			}
 		});
 		
-		return {
-			email: userToReturn.email,
-			name: userToReturn.name
-		};
+		return userToReturn;
 	}
 	
-	async getUserByEmail(userEmail: string): Promise<ILoginUserDTO | null> {
+	async getUserByEmail(userEmail: string): Promise<User | null> {
 		
 		const user = await prismaClient.user.findFirst({
 			where : {
@@ -37,14 +28,6 @@ export class UsersRepository implements IUsersRepository{
 			}
 		});
 
-		if(!user) 
-			return null;
-
-		const userToReturn = {
-			email: user.email,
-			password: user.password
-		};
-
-		return userToReturn;
+		return user;
 	}
 }
