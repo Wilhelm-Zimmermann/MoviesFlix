@@ -16,12 +16,21 @@ export class MoviesRepository implements IMoviesRepository {
 		return movieCreated;
 	}
 
-	getRatedMovies(): Promise<Movie> {
-		throw new Error("Method not implemented.");
-	}
+	async getRatedMovies(): Promise<Movie[] | null> {
+		const ratedMovies = await prismaClient.movie.findMany({
+			orderBy:[
+				{
+					averageRate: "desc"
+				}
+			],
+			where : {
+				averageRate: {
+					gt:0
+				},
+			}
+		});
 
-	rateMovie(userId: string, movieId: string, rate: number): Promise<Rating> {
-		throw new Error("Method not implemented.");
+		return ratedMovies;
 	}
 
 	async findMovieById(movieId: number): Promise<Movie | null> {
@@ -32,4 +41,16 @@ export class MoviesRepository implements IMoviesRepository {
 		return movie;
 	}
 
+	async updateMovieAverageRate(rate: number, movieId: number): Promise<Movie | null> {
+		const movie = await prismaClient.movie.update({
+			where : { 
+				id: movieId
+			},
+			data : {
+				averageRate: rate
+			}
+		});
+
+		return movie;
+	}
 }

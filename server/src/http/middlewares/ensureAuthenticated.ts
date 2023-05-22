@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
 import jwtConfig from "../../utils/jwtConfig";
 import { AppError } from "../../shared/errors/AppError";
+import { Payload } from "@prisma/client/runtime";
 
 interface IPayload{
-    sub:string;
+    userId:string;
 }
 
 export default async function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
@@ -18,7 +19,11 @@ export default async function ensureAuthenticated(req: Request, res: Response, n
 	const [, token] = bearerToken.split(" ");
 
 	try{
-		const {sub: user_id} = verify(token, jwtConfig.secretKey) as IPayload;
+		const {userId} = verify(token, jwtConfig.secretKey) as IPayload;
+
+		req.user = {
+			id : userId
+		};
 
 		next();
 	}catch(err){
