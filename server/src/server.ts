@@ -8,14 +8,19 @@ import { AppError } from "./shared/errors/AppError";
 const app = express();
 const port = 8080;
 
+// Api Configurations
 app.use(cors({
 	origin:"http://localhost:3000",
 	methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
 	credentials: true
 }));
 app.use(express.json());
+app.use("/users/upload", express.static("./uploads"));
+
+// Application Routes
 app.use(router);
 
+// Error Handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 	if(err instanceof AppError){
 		return res.status(err.statusCode).json({ error : err.message });

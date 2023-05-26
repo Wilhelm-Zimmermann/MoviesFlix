@@ -1,3 +1,3 @@
 import { ICreateUserDTO } from "./ICreateUserDTO";
 
-export type ILoginUserDTO = Omit<ICreateUserDTO, "name">
+export type ILoginUserDTO = Pick<ICreateUserDTO, "email" | "password">

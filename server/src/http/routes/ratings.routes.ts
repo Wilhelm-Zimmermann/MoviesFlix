@@ -5,6 +5,6 @@ const ratingsRouter = express.Router();
 
 const ratingsController = new RatingsController();
 
-ratingsRouter.post("/ratings/:movieId",ensureAuthenticated, ratingsController.createRating);
+ratingsRouter.post("/ratings/:movieId", ensureAuthenticated, ratingsController.createRating);
 
 export { ratingsRouter };
