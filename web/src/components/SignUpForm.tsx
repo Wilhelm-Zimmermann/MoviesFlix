@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { api } from "../utils/api";
 import { VerifyFields } from "../utils/formValidations";
+import { InputForm } from "./InputForm";
 
 interface LoginResponse{
     token: string;
@@ -15,7 +16,6 @@ export function SignUpForm(){
         passwordMatch: "",
     })
     const [emailTaken, setEmailTaken] = useState("");
-
     const [isValid, setIsValid] = useState<boolean>(true);
 
     const { login } = useAuth();
@@ -69,49 +69,12 @@ export function SignUpForm(){
                     <li>Username needs to have at least 3 characters</li>
                 </ul>
             )}
-                <div className="mb-4">
-                    <label className="block text-gray-50 text-sm font-bold mb-2" htmlFor="email">
-                        Email
-                    </label>
-                    <input onChange={e => setFormInfo({
-                        ...formInfo,
-                        email: e.currentTarget.value
-                    })} 
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="text" placeholder="Email Address"/>
-                </div>
 
-                <div className="mb-4">
-                    <label className="block text-gray-50 text-sm font-bold mb-2" htmlFor="username">
-                        User Name
-                    </label>
-                    <input onChange={e => setFormInfo({
-                        ...formInfo,
-                        username: e.currentTarget.value
-                    })} 
-                    className="shadow focus:outline-red-800 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username"/>
-                </div>
+                <InputForm name="Email" id="email" setFormInfo={setFormInfo} formInfo={formInfo} type="text"/>
+                <InputForm name="Username" id="username" setFormInfo={setFormInfo} formInfo={formInfo} type="text"/>
+                <InputForm name="Password" id="password" setFormInfo={setFormInfo} formInfo={formInfo} type="password"/>
+                <InputForm name="Confirm Password" id="passwordMatch" setFormInfo={setFormInfo} formInfo={formInfo} type="password"/>
 
-                <div>
-                    <label className="block text-gray-50 text-sm font-bold mb-2" htmlFor="password">
-                        Password
-                    </label>
-                    <input onChange={e => setFormInfo({
-                        ...formInfo,
-                        password: e.currentTarget.value
-                    })} 
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="Password"/>
-                </div>
-
-                <div className="mb-6">
-                    <label className="block text-gray-50 text-sm font-bold mb-2" htmlFor="passwordToMatch">
-                        Confirm Password
-                    </label>
-                    <input onChange={e => setFormInfo({
-                        ...formInfo,
-                        passwordMatch: e.currentTarget.value
-                    })} 
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="passwordToMatch" type="password" placeholder="Confirm Password"/>
-                </div>
                 <div className="flex items-center justify-between">
                     <button onClick={isValidToSend} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                         Create
@@ -120,6 +83,7 @@ export function SignUpForm(){
                         Already have an account?
                     </a>
                 </div>
+
             </form>
     )
 }
