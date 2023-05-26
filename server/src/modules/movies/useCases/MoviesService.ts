@@ -57,8 +57,20 @@ export class MoviesService{
 		return filteredMovies.slice(0, 100);
 	}
 
-	async getRatedMovies(): Promise<Movie[]> {
-		const movies = await this.moviesRepository.getRatedMovies();     
+	async getRatedMovies(): Promise<MoviesResponse[]> {
+		const moviesData = await this.moviesRepository.getRatedMovies();     
+
+		const movies: MoviesResponse[] = moviesData.map(movie => {
+			return {
+				id: movie.id,
+				name: movie.name,
+				summary: movie.description.substring(0, 150).concat("...."),
+				averageRate: 0,
+				image: {
+					medium: movie.imageURL
+				}
+			};
+		});
 
 		return movies.slice(0, 100);
 	}
@@ -99,10 +111,10 @@ export class MoviesService{
 	}
 
 	async createMovie(movie: CreateMovieDTO): Promise<Movie> {
-		const movieAlreadyExists = await this.moviesRepository.findMovieById(movie.id);		
+		const movieAlreadyExists = await this.moviesRepository.findMovieById(movie.id);
 
 		if(movieAlreadyExists)
-			throw new AppError("This movie already exists", 400);
+			throw new AppError("This movie already exists", 409);
 		
 		const movieToCreate = this.moviesRepository.createMovie(movie);
 

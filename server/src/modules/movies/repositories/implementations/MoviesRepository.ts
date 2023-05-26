@@ -8,7 +8,7 @@ export class MoviesRepository implements IMoviesRepository {
 		const movieCreated = await prismaClient.movie.create({ data: {
 			id: movie.id,
 			name: movie.name,
-			averageRate: 0.0,
+			averageRate: 0,
 			imageURL: movie.imageURL,
 			description: movie.description,
 		}});
@@ -23,11 +23,6 @@ export class MoviesRepository implements IMoviesRepository {
 					averageRate: "desc"
 				}
 			],
-			where : {
-				averageRate: {
-					gt:0
-				},
-			}
 		});
 
 		return ratedMovies;

@@ -25,7 +25,7 @@ export class MoviesController {
 
 		const movie = await moviesService.getMovieDetail(Number(movieId));
 
-		return res.status(200).json({ movie });
+		return res.status(200).json(movie);
 	}
 
 	async createMovie(req: Request, res: Response): Promise<Response> {
@@ -34,7 +34,7 @@ export class MoviesController {
 
 		const movie = await moviesService.createMovie({ name, description, imageURL, id});
 
-		return res.status(201).json({ movie });
+		return res.status(201).json(movie);
 	}
 
 	async findMovieByQuery(req: Request, res: Response): Promise<Response> {

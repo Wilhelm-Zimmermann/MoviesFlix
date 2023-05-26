@@ -8,6 +8,8 @@ import { sign } from "jsonwebtoken";
 import jwtConfig from "../../../utils/jwtConfig";
 import { AppError } from "../../../shared/errors/AppError";
 import { ILoginResponse } from "../responses/ILoginResponse";
+import { User } from "@prisma/client";
+import { StorageProvider } from "../../../utils/Storage";
 
 
 @injectable()
@@ -18,13 +20,14 @@ export class UserService {
 		const hashedPassword = await hash(userInfo.password, 8);
 		const userToCreate = {
 			...userInfo,
-			password: hashedPassword
+			password: hashedPassword,
+			profileImageUrl: ""
 		};
 		
 		const userAlreadyExists = await this.usersRepository?.getUserByEmail(userInfo.email);		
 
 		if(userAlreadyExists)
-			throw new AppError("This email is already in use", 400);
+			throw new AppError("This email is already in use", 409);
 
 		const user = await this.usersRepository.createUser(userToCreate);
 
@@ -56,5 +59,44 @@ export class UserService {
 		);
 
 		return {token};
+	}
+
+	async uploadUserPhoto(userId: string, profilePhoto: string): Promise<User> {
+		// Procurando se existe um usuário no banco de dados com base no email
+		const user = await this.usersRepository.getUserById(userId);
+		
+		const storageProvider = new StorageProvider();
+
+		if(user.profileImageUrl.length > 2)
+			await storageProvider.delete(user.profileImageUrl, "");
+
+		if(!user){
+			throw new AppError("User not found", 404);
+		}
+		const userUpdated = await this.usersRepository.updateUserProfilePhoto(user.id, profilePhoto);
+
+		return userUpdated;
+	}
+
+	async updateUserPassword(email: string, passwordToReset: string): Promise<User>{
+		const user = await this.usersRepository.getUserByEmail(email);
+
+		passwordToReset = await hash(passwordToReset, 8);
+
+		if(!user)
+			throw new AppError("User not found", 404);
+
+		const updatedUser = await this.usersRepository.updateUserPassword(user.id,passwordToReset);
+
+		return updatedUser;
+	}
+
+	async getUserProfile(id: string): Promise<User> {
+		const user = await this.usersRepository.getUserById(id);
+
+		if(!user) 
+			throw new AppError("User not found", 404);
+
+		return user;
 	}
 }

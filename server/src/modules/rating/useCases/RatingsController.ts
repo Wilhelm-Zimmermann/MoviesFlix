@@ -11,6 +11,6 @@ export class RatingsController {
 		const ratingService = container.resolve<RatingsService>(RatingsService);
 		const rating = await ratingService.createRating({ rate, userId: id, movieId: Number(movieId) });
 
-		return res.status(201).json({ rating });
+		return res.status(201).json(rating);
 	}
 }

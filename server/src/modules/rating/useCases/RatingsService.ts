@@ -8,6 +8,7 @@ import { AppError } from "../../../shared/errors/AppError";
 
 interface RatingResponse {
 	movieUrl: string;
+	movieAverageRate: number;
 }
 
 @injectable()
@@ -31,19 +32,17 @@ export class RatingsService {
 
 		const ratingAlreadyExists = await this.ratingsRepository.findRatingByUserIdAndMovieId(ratingToCreate.userId, ratingToCreate.movieId);
 
-		let rating;
 		if(ratingAlreadyExists){
-			rating = await this.ratingsRepository.updateRating({ id: ratingAlreadyExists.id, rate: ratingToCreate.rate });
+			await this.ratingsRepository.updateRating({ id: ratingAlreadyExists.id, rate: ratingToCreate.rate });
 
 			const movieRatings = await this.ratingsRepository.listRatingsByMovieId(ratingToCreate.movieId);
 			const ratingsAverage = movieRatings.reduce((accumulator, currentValue) => accumulator + currentValue["rate"], 0);
 			
 			await this.moviesRepository.updateMovieAverageRate(ratingsAverage, movieExists.id);
-
-			return {movieUrl: ratedMovieDetailsUrl};
+			return {movieUrl: ratedMovieDetailsUrl, movieAverageRate: ratingsAverage};
 		}
 
-		rating = await this.ratingsRepository.createRating(ratingToCreate);
+		await this.ratingsRepository.createRating(ratingToCreate);
 
 		const movieRatings = await this.ratingsRepository.listRatingsByMovieId(ratingToCreate.movieId);
 
@@ -52,7 +51,7 @@ export class RatingsService {
 		await this.moviesRepository.updateMovieAverageRate(ratingsAverage, movieExists.id);
 
 
-		return {movieUrl: ratedMovieDetailsUrl};
+		return {movieUrl: ratedMovieDetailsUrl, movieAverageRate: ratingsAverage};
 	}
 
 	

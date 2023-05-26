@@ -11,11 +11,12 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(uuid())
-  name     String
-  email    String
-  password String
-  Rating   Rating[]
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique @db.VarChar(30)
+  password        String
+  profileImageUrl String
+  Rating          Rating[]
 }
 
 model Rating {
@@ -31,7 +32,7 @@ model Movie {
   id          Int      @id
   name        String
   imageURL    String
-  description String
+  description String   @db.VarChar(10000)
   averageRate Float
   Rating      Rating[]
 }
