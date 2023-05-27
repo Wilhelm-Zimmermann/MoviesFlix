@@ -10,6 +10,9 @@ lerna-debug.log*
 #vs code
 .vscode
 
+./uploads/*.jpg
+./uploads/*.png
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 

@@ -13,7 +13,7 @@ export default async function ensureAuthenticated(req: Request, res: Response, n
 	const bearerToken = req.headers.authorization;
 
 	if (!bearerToken) {
-		throw new AppError("Token missing");
+		throw new AppError("Token missing", 401);
 	}
 
 	const [, token] = bearerToken.split(" ");
