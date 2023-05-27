@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { RateMovieButtons } from "../RateMovieButtons";
 import { api } from "../../utils/api";
+import axios from "axios";
+import { ErrorResponse } from "../../utils/ErrorResponse";
 
 interface MovieDescriptionProps{
-    id: number;
-    name: string;
-    description: string;
-    averageRate: number;
-    image:{
+    id?: number;
+    name?: string;
+    description?: string;
+    averageRate?: number;
+    image?:{
         medium: string;
     }
 }
@@ -17,17 +19,27 @@ interface RateMovieDataProps{
     movieAverageRate: number;
 }
 
-export function MovieDescription({id, name, description, averageRate, image }: MovieDescriptionProps){
-    const [movieAverateRate, setMovieAverageRate] = useState<number>(averageRate);
+export function MovieDescription({id, name, description = "<p>H@LLO Welt</p>", averageRate, image }: MovieDescriptionProps){
+    const [movieAverateRate, setMovieAverageRate] = useState<number | undefined>(averageRate);
 
-    const rateMovie = async (like: number) => {        
-        await api.post("/movies/create",
-            {
-                id,
-                name,
-                description,
-                imageURL: image.medium
-            });        
+    const rateMovie = async (like: number) => {       
+        try{
+            await api.post("/movies/create",
+                {
+                    id,
+                    name,
+                    description,
+                    imageURL: image?.medium
+                });        
+        } catch(err){
+            if(axios.isAxiosError(err)){
+                const axiosError = err as ErrorResponse;
+
+                if(axiosError.response){
+                    console.log(axiosError.response?.data.error);
+                }
+            }
+        }
 
         const {data: rateMovieData} = await api.post<RateMovieDataProps>(`/ratings/${id}`, 
             {

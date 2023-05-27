@@ -1,8 +1,10 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { api } from "../utils/api";
 import { VerifyFields } from "../utils/formValidations";
 import { InputForm } from "./InputForm";
+import axios from "axios";
+import { ErrorResponse } from "../utils/ErrorResponse";
 
 interface LoginResponse{
     token: string;
@@ -15,8 +17,8 @@ export function SignUpForm(){
         password:"",
         passwordMatch: "",
     })
-    const [emailTaken, setEmailTaken] = useState("");
     const [isValid, setIsValid] = useState<boolean>(true);
+    const [error, setError] = useState<string>("");
 
     const { login } = useAuth();
 
@@ -28,28 +30,38 @@ export function SignUpForm(){
 
     const createUser = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setError("");
 
         if(!isValid)
             return;
 
         const {email, password, username} = formInfo;
 
-        await api.post("/users/create", {
-            email,
-            name: username,
-            password
-        }).then(data => setEmailTaken("")).catch(err => {
-            setEmailTaken(err.response.data.error);
-        })
+        try{
+            await api.post("/users/create", {
+                email,
+                name: username,
+                password
+            });
+        }catch(err){
+            if(axios.isAxiosError(err)){
+                const axiosError = err as ErrorResponse;
+
+                setError(axiosError.response.data.error);
+                return;
+            }
+            return;
+        }
 
         try{
             const {data: token} = await api.post<LoginResponse>("/users/login", {
                 email,
                 password
             });
-    
-            login(token.token)
-        }catch (err){
+
+            login(token.token);
+        } 
+        catch (err){
             return;
         }
     }
@@ -57,8 +69,9 @@ export function SignUpForm(){
     return(
         <form onSubmit={createUser} className="flex flex-col justify-between bg-gray-700 w-80 rounded px-8 pt-6 pb-8 mb-4 sm:w-[500px] shadow-sm shadow-red-800">
             <h1 className="text-white text-2xl mb-2">SIGN UP</h1>
-            {emailTaken !== "" && (
-                <p className="text-red-500">{emailTaken}</p>
+
+            {!!error && (
+                <p className="text-red-500">{error}</p>
             )}
 
             {!isValid && (

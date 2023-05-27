@@ -9,9 +9,9 @@ function App() {
     <div className="bg-gray-950 min-h-screen">
       <Font family="Roboto">
         <BrowserRouter>
-          <AuthProvider>
-            <AppRoutes />
-          </AuthProvider>
+            <AuthProvider>
+              <AppRoutes />
+            </AuthProvider>
         </BrowserRouter>
       </Font>
     </div>
