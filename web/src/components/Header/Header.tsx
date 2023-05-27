@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Profile } from "./Profile";
 import { SearchBar } from "../SearchBar";
 import { useAuth } from "../../contexts/AuthContext";
+import { NotAuthProfile } from "./NotAuthProfile";
 
 interface HeaderProps {
     color: string;
@@ -9,7 +10,7 @@ interface HeaderProps {
 
 export function Header({color}: HeaderProps){
     const navigate = useNavigate();
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated } = useAuth();    
 
     const goToHome = () => {
         navigate("/");
@@ -24,9 +25,11 @@ export function Header({color}: HeaderProps){
                 <SearchBar />
             </div>
 
-            <div className="flex w-20 h-20 rounded-full">
-                {isAuthenticated ? <Profile /> : <h1 className="text-white">Não logado</h1>}
-                
+            <div className="flex w-20 h-20 rounded-full item-center justify-center">
+                {isAuthenticated 
+                    ? <Profile /> 
+                    : <NotAuthProfile />
+                }
             </div>            
         </div>
     )

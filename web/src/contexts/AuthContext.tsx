@@ -36,8 +36,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [isAuthenticated, setIsAuthenticated] = useState(true);
     const [userProfile, setUserProfile] = useState<UserProfile>();
     const [userProfilePhoto, setUserProfilePhoto] = useState<string>();
+
     const navigate = useNavigate();
     const tokenKey = "@User";
+
+    const getToken = (): string | null => {
+        return localStorage.getItem("@User");
+    }    
 
     const login = (token: string) => {
         localStorage.setItem(tokenKey, token);
@@ -48,10 +53,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const logout = () => {
         localStorage.removeItem(tokenKey);
         setIsAuthenticated(false);
-        navigate("/users/login");
     };
 
     const getUserProfile = async () => {
+        const token = getToken()
+
+        // verificando se o token está disponível, pois se tentarmos pegar o perfil do usuário sem ele a api retornará o Status 401
+        if(!token){
+            setIsAuthenticated(false);
+            return;
+        }
+
         const {data: user} = await api.get<UserProfile>("/users/get-profile")
 
         setUserProfile(user);

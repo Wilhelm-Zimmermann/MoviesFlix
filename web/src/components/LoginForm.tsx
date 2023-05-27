@@ -1,8 +1,9 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useContext } from "react";
 import { api } from "../utils/api";
 import { useAuth } from "../contexts/AuthContext";
-import axios from "axios";
 import { InputForm } from "./InputForm";
+import axios from "axios";
+import { ErrorResponse } from "../utils/ErrorResponse";
 
 interface LoginResponse{
     token: string;
@@ -14,32 +15,34 @@ export function LoginForm(){
         password:""
     });
     const [userValid, setUserValid] = useState<boolean>(true);
+    const [error, setError] = useState<string>("");
     const { login } = useAuth();
 
     const loginUser = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setError("");
 
         try{
-            const {data: token} = await api.post<LoginResponse>("/users/login", userLogin);
-    
-            login(token.token);
-        }
-        catch(err) {
+            const data = await api.post<LoginResponse>("/users/login", userLogin);
+            const {token} = data.data;
+            login(token);
+        } catch (err){
             if(axios.isAxiosError(err)){
-                setUserValid(false);
+                const axiosError = err as ErrorResponse;
+
+                setError(axiosError.response.data.error);
                 return;
             }
         }
     }
 
-    console.log(userLogin);
-
     return (
         <form onSubmit={loginUser} className="flex flex-col justify-between bg-gray-700 rounded px-8 pt-6 pb-8 mb-4 sm:w-[500px] sm:h-[375px] shadow-sm shadow-red-800">
             <h1 className="text-white text-2xl">LOGIN</h1>
-            {!userValid && (
-                <p className="text-red-400 mb-4">Email/Password might be wrong</p>
+            {!!error && (
+                <p className="text-red-400 mb-4">{error}</p>
             )}
+
                 <InputForm name="Email" id="email" formInfo={userLogin} setFormInfo={setUserLogin} type="text"/>
                 <InputForm name="Password" id="password" formInfo={userLogin} setFormInfo={setUserLogin} type="password"/>
 

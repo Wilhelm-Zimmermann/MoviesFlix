@@ -17,7 +17,7 @@ export const PrivateRoute: React.FC<Props> = ({ component: RouteComponent }) => 
   
     if (!isAuthenticated) {
       // if user is not logged, this component will be rendered
-      return <NotLogged />
+      return <Navigate to="/forbidden"/>
     }
   
     return <Navigate to="/" />

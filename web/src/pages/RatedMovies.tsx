@@ -26,7 +26,7 @@ export function RatedMovies(){
             <Header color="black"/>
             {loading 
                 ? <MoviesContainerLoading />
-                : <MoviesContainer category="Todos os filmes" optionsToSelect={[{name: "Todos os filmes", url: "/"}]} movies={movies}/>
+                : <MoviesContainer dropdown category="Avaliados" optionsToSelect={[{name: "Todos os filmes", url: "/"}]} movies={movies}/>
             }
         </>
     )

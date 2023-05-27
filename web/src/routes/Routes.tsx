@@ -7,6 +7,8 @@ import { PrivateRoute } from './PrivateRoute';
 import { Login } from '../pages/Login';
 import { SearchMovies } from '../pages/SearchMovies';
 import { SignUp } from '../pages/SignUp';
+import { NotLogged } from '../pages/NotLogged';
+import { ResourceNotFound } from '../pages/ResourceNotFound';
 
 export const AppRoutes = () => {
   return (
@@ -19,6 +21,12 @@ export const AppRoutes = () => {
 
       {/* Not found page */}
       <Route path="*" element={<NotFound />} />
+
+      {/* Resource not found */}
+      <Route path="/resource/not-found" element={<ResourceNotFound />}/>
+
+      {/* When user is not logged */}
+      <Route path="/forbidden" element={<NotLogged />}/>
 
       {/* Private Routes */}
       <Route path="/movies/rated" element={<PrivateRoute component={RatedMovies}/>} />
