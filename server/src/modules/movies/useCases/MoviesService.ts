@@ -47,7 +47,7 @@ export class MoviesService{
 				summary: movie.summary.substring(0, 150).concat("..."),
 				averageRate: 0,
 				image: {
-					medium: movie.image.medium
+					medium: movie.image?.medium
 				}
 			};
 		});       
@@ -67,7 +67,7 @@ export class MoviesService{
 				summary: movie.description.substring(0, 150).concat("...."),
 				averageRate: 0,
 				image: {
-					medium: movie.imageURL
+					medium: movie?.imageURL
 				}
 			};
 		});
@@ -87,7 +87,7 @@ export class MoviesService{
 				summary: movieOnDatabase.description,
 				averageRate: movieOnDatabase.averageRate,
 				image: {
-					medium: movieOnDatabase.imageURL
+					medium: movieOnDatabase?.imageURL
 				}
 			};
 
