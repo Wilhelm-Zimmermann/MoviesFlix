@@ -25,7 +25,7 @@ export class UserService {
 		};
 		
 		const userAlreadyExists = await this.usersRepository?.getUserByEmail(userInfo.email);		
-
+		
 		if(userAlreadyExists)
 			throw new AppError("This email is already in use", 409);
 

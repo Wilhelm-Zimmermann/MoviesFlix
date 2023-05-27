@@ -36,7 +36,8 @@ export class RatingsService {
 			await this.ratingsRepository.updateRating({ id: ratingAlreadyExists.id, rate: ratingToCreate.rate });
 
 			const movieRatings = await this.ratingsRepository.listRatingsByMovieId(ratingToCreate.movieId);
-			const ratingsAverage = movieRatings.reduce((accumulator, currentValue) => accumulator + currentValue["rate"], 0);
+			const ratingsSum = movieRatings.reduce((accumulator, currentValue) => accumulator + currentValue["rate"], 0);
+			const ratingsAverage = ratingsSum / movieRatings.length;
 			
 			await this.moviesRepository.updateMovieAverageRate(ratingsAverage, movieExists.id);
 			return {movieUrl: ratedMovieDetailsUrl, movieAverageRate: ratingsAverage};
@@ -45,8 +46,8 @@ export class RatingsService {
 		await this.ratingsRepository.createRating(ratingToCreate);
 
 		const movieRatings = await this.ratingsRepository.listRatingsByMovieId(ratingToCreate.movieId);
-
-		const ratingsAverage = movieRatings.reduce((accumulator, currentValue) => accumulator + currentValue["rate"], 0);
+		const ratingsSum = movieRatings.reduce((accumulator, currentValue) => accumulator + currentValue["rate"], 0);
+		const ratingsAverage = ratingsSum / movieRatings.length;
 
 		await this.moviesRepository.updateMovieAverageRate(ratingsAverage, movieExists.id);
 
