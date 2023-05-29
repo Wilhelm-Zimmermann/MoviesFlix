@@ -16,7 +16,7 @@ import { StorageProvider } from "../../../utils/Storage";
 export class UserService {
 	constructor(@inject("IUsersRepository") private usersRepository: IUsersRepository){ }
 
-	async createUser(userInfo: ICreateUserDTO):Promise<IUserCreatedResponse>{
+	async createUser(userInfo: ICreateUserDTO):Promise<User>{
 		const hashedPassword = await hash(userInfo.password, 8);
 		const userToCreate = {
 			...userInfo,
@@ -31,10 +31,7 @@ export class UserService {
 
 		const user = await this.usersRepository.createUser(userToCreate);
 
-		return {
-			email: user.email,
-			name: user.name
-		};
+		return user;
 	}
 
 	async login(userInfo: ILoginUserDTO): Promise<ILoginResponse> {
@@ -65,14 +62,15 @@ export class UserService {
 		// Procurando se existe um usuário no banco de dados com base no email
 		const user = await this.usersRepository.getUserById(userId);
 		
+		if(!user){
+			throw new AppError("User not found", 404);
+		}
+
 		const storageProvider = new StorageProvider();
 
 		if(user.profileImageUrl.length > 2)
 			await storageProvider.delete(user.profileImageUrl, "");
 
-		if(!user){
-			throw new AppError("User not found", 404);
-		}
 		const userUpdated = await this.usersRepository.updateUserProfilePhoto(user.id, profilePhoto);
 
 		return userUpdated;

@@ -4,9 +4,10 @@ import { MoviesService } from "./MoviesService";
 
 export class MoviesController {
 	async getAllMovies(req: Request, res: Response): Promise<Response> {
+		const { page } = req.query;
 		const moviesService = container.resolve<MoviesService>(MoviesService);
 
-		const movies = await moviesService.getAllMovies();
+		const movies = await moviesService.getAllMovies(page.toString());
 
 		return res.status(200).json(movies);
 	}
@@ -23,7 +24,7 @@ export class MoviesController {
 		const moviesService = container.resolve<MoviesService>(MoviesService);
 		const { movieId } = req.params;
 
-		const movie = await moviesService.getMovieDetail(Number(movieId));
+		const movie = await moviesService.getMovieDetail(movieId);
 
 		return res.status(200).json(movie);
 	}
