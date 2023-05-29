@@ -175,3 +175,10 @@ Retorna:
     "movieAverageRate": 5
 }
 ```
+
+### Sempre que um error for gerado, a api retornará o seguinte
+```json
+  {
+    "error": "Nome do erro"
+  }
+```
