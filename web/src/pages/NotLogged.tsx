@@ -2,9 +2,12 @@ import { BiArrowBack, BiLogInCircle } from "react-icons/bi";
 import { CiCirclePlus } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import { NotLoggedButtons } from "../components/NotLoggedButtons";
+import { useAuth } from "../contexts/AuthContext";
+import { useEffect } from "react";
 
 export function NotLogged(){
     const navigate = useNavigate();
+    const {logout} = useAuth();
 
     const loginPage = () => {
         navigate("/users/login");
@@ -17,6 +20,10 @@ export function NotLogged(){
     const homePage = () => {
         navigate("/");
     }
+
+    useEffect(() => {
+        logout();
+    }, []);
 
     return(
         <>

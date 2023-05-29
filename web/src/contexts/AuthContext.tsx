@@ -1,6 +1,8 @@
 import { createContext, useState, useContext } from 'react';
 import { api } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { ErrorResponse } from '../utils/ErrorResponse';
 
 interface UserProfile{
     name: string;
@@ -60,7 +62,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
         // verificando se o token está disponível, pois se tentarmos pegar o perfil do usuário sem ele a api retornará o Status 401
         if(!token){
-            setIsAuthenticated(false);
+            logout();
             return;
         }
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RateMovieButtons } from "../RateMovieButtons";
 import { api } from "../../utils/api";
 import axios from "axios";
@@ -36,7 +36,7 @@ export function MovieDescription({id, name, description = "<p>H@LLO Welt</p>", a
                 const axiosError = err as ErrorResponse;
 
                 if(axiosError.response){
-                    console.log(axiosError.response?.data.error);
+                    return err;
                 }
             }
         }

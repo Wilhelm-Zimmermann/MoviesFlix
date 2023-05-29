@@ -5,7 +5,7 @@ import { UserOptions } from "./UserOptions";
 import mayuriPhoto from "../../assets/mayuri.jpg";
 
 export function Profile() {
-    const { getUserProfile, userProfile, userProfilePhoto, logout } = useAuth();
+    const { getUserProfile, userProfilePhoto,userProfile, logout } = useAuth();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -45,7 +45,7 @@ export function Profile() {
 
     return (
         <>
-        <div onClick={toggleIsOpen} className="w-full h-full flex items-center relative">
+        <div onClick={toggleIsOpen} className="w-full h-full flex items-center relative cursor-pointer">
             <div>
                 <img src={userProfilePhoto} onError={handleImageError} alt="user_" className="w-20 h-20 object-cover rounded-full"/>
             </div>
@@ -53,7 +53,7 @@ export function Profile() {
             <input ref={fileInputRef} type="file" id="photo" name="userPhoto" accept="image/*" onChange={uploadUserProfilePhoto} className="w-0 h-0 invisible"/>
             {
                 isOpen && (
-                    <UserOptions toggleIsOpen={toggleIsOpen} handleButtonClick={handleButtonClick} logoutUser={logoutUser} />
+                    <UserOptions username={userProfile?.name} toggleIsOpen={toggleIsOpen} handleButtonClick={handleButtonClick} logoutUser={logoutUser} />
                 )
             }
         </div>

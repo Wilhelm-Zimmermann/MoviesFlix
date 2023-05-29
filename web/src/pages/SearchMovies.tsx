@@ -24,10 +24,6 @@ export function SearchMovies(){
         getMovies();        
     }, [location]);
 
-    if(movies?.length === 0){
-        return <h1>não há filmes para mostrar</h1>
-    }
-
     return (
         <>
             <Header color="black"/>
