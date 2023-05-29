@@ -21,33 +21,45 @@
 1. Abrir um terminal na pasta web e executar o comand `yarn` ou `npm install`
 2. Depois `yarn start` ou `npm start` para rodar o frontend...
 
-## Dependências Utilizadas.
-### * Frontend
-* React
-* React Router
-* Axios
-* React Font
-* React Icons
-* React UUID
-* Typescript
-* Tailwindcss
+<h1>Dependências Utilizadas</h1>
 
-### * Backend
-* Typescript
-* Express
-* Multer
-* Babel
-* Typescript
-* Prisma
-* Jest 
-* Eslint
-* Bcrypt
-* Cors
-* Json Web Token
-* Express Async Errors
-* Tsyringe
-* Reflect Metadata
-* https://www.tvmaze.com/api: api onde estão registrados os filmes
+<details>
+  <summary><h3> Front End </h3></summary>
+
+  <ul>
+    <li>React</li>
+    <li>React Router</li>
+    <li>Axios</li>
+    <li>React Font</li>
+    <li>React Icons</li>
+    <li>React UUID</li>
+    <li>Typescript</li>
+    <li>Tailwindcss</li>
+  </ul>
+</details>
+    
+<details>
+ <summary><h3> Back End </h3></summary>
+  <ul>
+    <li>Typescript</li>
+    <li>Express</li>
+    <li>Multer</li>
+    <li>Babel</li>
+    <li>Typescript</li>
+    <li>Prisma</li>
+    <li>Typescript</li>
+    <li>Jest</li>
+    <li>Eslint</li>
+    <li>Bcrypt</li>
+    <li>Cors</li>
+    <li>Json Web Token</li>
+    <li>Express Async Errors</li>
+    <li>Tsyringe</li>
+    <li>Reflect Metadata</li>
+    <li>https://www.tvmaze.com/api: api onde estão registrados os filmes)</li>
+  </ul>
+  </details>
+
 
 ## Api endpoints
 ### /movies
