@@ -33,8 +33,8 @@ export class MoviesService{
 		@inject("IMoviesRepository") private moviesRepository: IMoviesRepository,
 	){}
 
-	async getAllMovies(): Promise<MoviesResponse[]> {
-		const moviesURL = "https://api.tvmaze.com/shows";
+	async getAllMovies(page:string): Promise<MoviesResponse[]> {
+		const moviesURL = `https://api.tvmaze.com/shows?page=${page}&limit=10`;
 		const moviesOnDatabase = await this.moviesRepository.getRatedMovies();
 		const moviesIDS = moviesOnDatabase.map(x => x.id);
 
@@ -54,7 +54,7 @@ export class MoviesService{
 		
 		const filteredMovies = movies.filter(x => !moviesIDS.includes(x.id));
 
-		return filteredMovies.slice(0, 100);
+		return filteredMovies;
 	}
 
 	async getRatedMovies(): Promise<MoviesResponse[]> {
@@ -75,14 +75,20 @@ export class MoviesService{
 		return movies.slice(0, 100);
 	}
 
-	async getMovieDetail(id: number): Promise<MoviesResponse | null> {
-		const moviesURL = `https://api.tvmaze.com/shows/${id}`;
-		const movieOnDatabase = await this.moviesRepository.findMovieById(id);
+	async getMovieDetail(id: string): Promise<MoviesResponse | null> {
+		const idNum = Number(id);
+
+		if(Number.isNaN(idNum)){
+			throw new AppError("Can not convert this param to a number", 400);
+		}
+
+		const moviesURL = `https://api.tvmaze.com/shows/${idNum}`;
+		const movieOnDatabase = await this.moviesRepository.findMovieById(idNum);
 		let movie: MoviesResponse;
 
 		if(movieOnDatabase){
 			movie = {
-				id,
+				id: idNum,
 				name: movieOnDatabase.name,
 				summary: movieOnDatabase.description,
 				averageRate: movieOnDatabase.averageRate,
@@ -90,15 +96,14 @@ export class MoviesService{
 					medium: movieOnDatabase?.imageURL
 				}
 			};
-
 			return movie;
 		}
 
 		
-		const {data: movieData} = await axios.get<MoviesResponse>(moviesURL);   
+		const {data: movieData} = await axios.get<MoviesResponse>(moviesURL);   		
 
 		movie = {
-			id,
+			id: idNum,
 			name: movieData.name,
 			summary: movieData.summary,
 			averageRate: 0,
@@ -111,6 +116,10 @@ export class MoviesService{
 	}
 
 	async createMovie(movie: CreateMovieDTO): Promise<Movie> {
+		if(typeof movie.id !== "number"){
+			throw new AppError("Movie 'id' must be a number", 400);
+		}
+
 		const movieAlreadyExists = await this.moviesRepository.findMovieById(movie.id);
 
 		if(movieAlreadyExists)
@@ -140,6 +149,6 @@ export class MoviesService{
 		});
 
 
-		return movies.slice(0, 100);
+		return movies;
 	}
 }
