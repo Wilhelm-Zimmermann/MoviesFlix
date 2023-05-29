@@ -27,6 +27,6 @@ export default async function ensureAuthenticated(req: Request, res: Response, n
 
 		next();
 	}catch(err){
-		throw new AppError("Invalid Token");
+		throw new AppError("Invalid Token", 401);
 	}
 }

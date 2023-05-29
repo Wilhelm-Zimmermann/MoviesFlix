@@ -10,7 +10,7 @@ const port = 8080;
 
 // Api Configurations
 app.use(cors({
-	origin:"http://localhost:3000",
+	origin:["http://localhost:3000"],
 	methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
 	credentials: true
 }));

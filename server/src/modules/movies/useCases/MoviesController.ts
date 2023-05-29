@@ -4,8 +4,12 @@ import { MoviesService } from "./MoviesService";
 
 export class MoviesController {
 	async getAllMovies(req: Request, res: Response): Promise<Response> {
-		const { page } = req.query;
+		let { page } = req.query;
 		const moviesService = container.resolve<MoviesService>(MoviesService);
+
+		if(!page){
+			page = "0";
+		}
 
 		const movies = await moviesService.getAllMovies(page.toString());
 
