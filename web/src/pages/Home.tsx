@@ -18,7 +18,10 @@ export function Home(){
         const getMovies = async () => {
             setLoading(true)
             const {data: moviesFromApi} = await api.get<MoviesResponse[]>(`/movies?page=${pageNumber}`);
-    
+            
+            if(moviesFromApi.length === 0){
+                return;
+            }
     
             setMovies(prevMovies => [...prevMovies, ...moviesFromApi])
             setFirstLoading(false);
@@ -37,16 +40,12 @@ export function Home(){
             }
           };
       
-          // Attach the scroll event listener
           window.addEventListener('scroll', handleScroll);
       
-          // Clean up the event listener on component unmount
           return () => {
             window.removeEventListener('scroll', handleScroll);
           };
-    }, []);
-
-    console.log(pageNumber)
+    }, [pageNumber]);
 
     return (
         <>
@@ -56,8 +55,8 @@ export function Home(){
                 : (
                     <>
                         <MoviesContainer dropdown category="Todos os filmes" optionsToSelect={[{name: "Avaliados", url: "/movies/rated"}]} movies={movies}/>
-                        <div ref={infiniteScrollRef}></div>
                         {loading && <MoviesContainerLoading />}
+                        <div ref={infiniteScrollRef}></div>
                     </>
                 )
             }

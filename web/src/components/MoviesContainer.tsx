@@ -28,7 +28,7 @@ export function MoviesContainer({ movies, category, optionsToSelect, dropdown } 
 
             <div className="flex flex-1 w-full gap-y-12 justify-center sm:justify-between flex-wrap items-center mt-8">
                 {movies?.length === 0 && (
-                    <h1 className="text-white text-3xl"> No movies to show</h1>
+                    <h1 className="text-white text-3xl"> No movies to show </h1>
                 )}
                 {
                     movies?.map((movie, index) => {
@@ -40,7 +40,7 @@ export function MoviesContainer({ movies, category, optionsToSelect, dropdown } 
                             </div>
                         )
                     })
-                }
+                }                
             </div>
         </div>
     )
