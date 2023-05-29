@@ -5,7 +5,17 @@ import { UserController } from "../../modules/users/useCases/UserController";
 import ensureAuthenticated from "../middlewares/ensureAuthenticated";
 const userRouter = express.Router();
 const userController = new UserController();
-const uploadProfilePhoto = multer(uploadConfig);
+
+const uploadProfilePhoto = multer({
+	storage: uploadConfig.storage,
+	fileFilter: (req,file, cb) => {
+		if(file.mimetype == "image/jpg" || file.mimetype == "image/png" || file.mimetype == "image/jpeg"){
+			cb(null, true);
+		}else{
+			cb(null, false);
+		}
+	}
+});
 
 userRouter.get("/users/get-profile", ensureAuthenticated, userController.getUserProfile);
 userRouter.post("/users/create", userController.createUser);
