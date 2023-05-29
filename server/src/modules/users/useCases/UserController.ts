@@ -24,7 +24,7 @@ export class UserController {
 		const userService = container.resolve<UserService>(UserService);
 
 		const { id } = req.user;
-		const profilePhoto = req.file.filename;
+		const profilePhoto = req.file.filename;		
 
 		await userService.uploadUserPhoto(id, profilePhoto);
 		const userProfileImageUrl = `http://localhost:8080/users/upload/${profilePhoto}`;
