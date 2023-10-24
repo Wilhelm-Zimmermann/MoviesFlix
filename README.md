@@ -1,4 +1,4 @@
-# GiovanellaFlix
+# MoviesFlix
 
 ## Para rodar o projeto
 * Ter o [NODE JS](https://www.nodejs.org) instalado
