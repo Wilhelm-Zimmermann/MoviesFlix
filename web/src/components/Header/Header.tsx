@@ -19,7 +19,7 @@ export function Header({color}: HeaderProps){
     return (
         <div className={`flex w-full justify-between items-center flex-col gap-y-2 z-10 bg-${color} px-7 py-5 md:flex-row`}>
             <div onClick={goToHome} className="cursor-pointer">
-                <h1 className="text-gray-50 text-3xl hover:text-gray-100"> GIOVANELLA <span className="text-red-700 hover:text-red-600">FLIX</span></h1>
+                <h1 className="text-gray-50 text-3xl hover:text-gray-100"> MOVIES <span className="text-red-700 hover:text-red-600">FLIX</span></h1>
             </div>
             <div>
                 <SearchBar />
